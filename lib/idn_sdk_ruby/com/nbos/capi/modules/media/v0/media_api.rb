@@ -22,6 +22,8 @@ module IdnSdkRuby
                   if response.code == 200
                     mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
                     return mediaApiModel
+                  else
+                    return response.parsed_response
                   end
                 end
 
@@ -31,8 +33,14 @@ module IdnSdkRuby
                   media_file = File.new(media_path)
                   response = remoteApi.uploadMedia(tokenApiModel, uuid, mediafor, media_file)
                   if response.code == 200
-                    mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
-                    return mediaApiModel
+                    if !response["extension"].nil?
+                      mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
+                      return mediaApiModel
+                    else
+                      return response.parsed_response
+                    end
+                  else
+                    return response.parsed_response
                   end
 
                 end

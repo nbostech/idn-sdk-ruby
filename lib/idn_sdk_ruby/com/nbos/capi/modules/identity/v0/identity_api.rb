@@ -20,14 +20,13 @@ module IdnSdkRuby
 									map = @apiContext.getClientCredentials()
 									clientId = map["client_id"]
 									secret = map["client_secret"]
-									#Need to add exception handling
-									#remoteApi.host_url = getHost()
 									response = remoteApi.getToken(clientId, secret, "client_credentials")
 									if response.code == 200
 										tokenApiModel = IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel.new(response.parsed_response)
 										@apiContext.setClientToken(tokenApiModel)
-										puts "token:#{tokenApiModel.getAccess_token()}"
 										return tokenApiModel
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -39,6 +38,8 @@ module IdnSdkRuby
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response)
 										@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
 										return memberApiModel
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -50,6 +51,8 @@ module IdnSdkRuby
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response["member"])
 										@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
 										return memberApiModel
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -66,6 +69,8 @@ module IdnSdkRuby
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response, false)
 										return memberApiModel
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -76,6 +81,8 @@ module IdnSdkRuby
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response, false)
 										return memberApiModel
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -84,7 +91,9 @@ module IdnSdkRuby
 									authorization = @apiContext.getUserToken('identity')
 									response = remoteApi.updateCredentials(authorization, updatePasswordApiModel)
 									if response.code == 200
-										return "Success"
+										return response.parsed_response
+									else
+										return response.parsed_response
 									end
 								end
 
@@ -98,7 +107,9 @@ module IdnSdkRuby
 									response = remoteApi.logout(authorization)
 									if response.code == 200
 										@apiContext.setUserToken('identity', nil)
-										return "Success"
+										return response.parsed_response
+									else
+										return response.parsed_response
 									end
 								end
 
