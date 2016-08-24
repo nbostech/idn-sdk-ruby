@@ -1,4 +1,4 @@
-require 'active_model'
+require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/basic_active_model"
 module IdnSdkRuby
   module Com
     module Nbos
@@ -6,12 +6,8 @@ module IdnSdkRuby
         module Modules
           module Identity
             module V0
-              class LoginModel
+              class LoginModel < IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::BasicActiveModel
                 attr_accessor :username, :password, :messageCode, :message
-
-                include ActiveModel::Validations
-                include ActiveModel::Conversion
-                extend ActiveModel::Naming
 
                 def initialize(name = nil, code = nil)
                   @username = name

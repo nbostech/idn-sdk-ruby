@@ -5,9 +5,9 @@ module IdnSdkRuby
         module Modules
           module Identity
             module V0
-              class MemberApiModel
+              class MemberApiModel < IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::BasicActiveModel
                 attr_accessor :id, :email, :firstName, :lastName, :phone, :description, :uuid, :isExternal,
-                              :socialAccounts, :emailConnects, :token
+                              :socialAccounts, :emailConnects, :token, :message
 
                 def initialize(parsed_response = nil, is_new = true)
                   if !parsed_response.nil?
@@ -43,6 +43,23 @@ module IdnSdkRuby
                       @emailConnects << IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::EmailConnectApiModel(ec)
                     end
                   end
+                end
+
+                def add_errors(json_response)
+                  json_response["errors"].each do |e|
+                    property_name = e['propertyName']
+                    msg = e['message']
+                    self.errors[property_name] << msg
+                  end
+                end
+
+                def add_messages(json_response)
+                  if json_response["message"].present?
+                    @message = json_response["message"]
+                  elsif json_response["error"].present?
+                    @message = json_response["error"]
+                  end
+
                 end
 
                 def as_json(options={})

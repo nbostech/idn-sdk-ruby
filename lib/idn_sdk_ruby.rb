@@ -19,6 +19,7 @@ require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/social_account_api_model
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/new_member_api_model"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/member_signup_model"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/update_password_api_model"
+require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/basic_active_model"
 
 require "idn_sdk_ruby/com/nbos/capi/modules/media/v0/media_ids_registry"
 require "idn_sdk_ruby/com/nbos/capi/modules/media/v0/media_remote_api"
