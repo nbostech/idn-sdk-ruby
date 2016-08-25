@@ -26,14 +26,14 @@ module IdnSdkRuby
 										api = IdnSdkRuby::Com::Nbos::Capi::Api::V0::NetworkApi.new
 										if (api != nil)
 											api.setApiContext(apiContext)
-											api.setHost("http://localhost:8080")
+											api.setHost("http://api.qa1.nbos.in")
 											return api
 										end
 									else
 										api = apiClass.new
 										if (api != nil)
 											api.setApiContext(apiContext)
-											host = "http://localhost:8080" if apiContext.getHost(moduleName).nil?
+											host = "http://api.qa1.nbos.in" if apiContext.getHost(moduleName).nil?
 											api.setHost(apiContext.getHost(moduleName))
 											return api
 										end 

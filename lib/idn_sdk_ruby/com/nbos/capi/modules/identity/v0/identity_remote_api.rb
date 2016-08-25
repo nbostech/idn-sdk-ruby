@@ -43,7 +43,7 @@ module IdnSdkRuby
 
 								def getToken(clientId, clientSecret, grantType)
 									query_params = {:client_id => clientId, :client_secret => clientSecret, :grant_type => grantType}
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									response = self.class.send("get", @host_url+@tokenUrl, :query => query_params)
 									return response
 								end
@@ -52,7 +52,7 @@ module IdnSdkRuby
 								end
 
 								def login(authorization, loginModel)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									body = loginModel.to_s
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("post", @host_url+@loginUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
@@ -60,7 +60,7 @@ module IdnSdkRuby
 								end
 
 								def signup(authorization, memberSignupModel)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									body = memberSignupModel.to_s
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("post", @host_url+@signupUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
@@ -71,7 +71,7 @@ module IdnSdkRuby
 								end
 
 								def updateCredentials(authorization,updatePasswordApiModel)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									body = updatePasswordApiModel.to_s
 									response = self.class.send("post", @host_url+@changeUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
@@ -85,7 +85,7 @@ module IdnSdkRuby
 								end
 
 								def connect(authorization, oauth_details, connectService, clientId)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									@connect_service = get_social_login_uri(connectService)
 									body = { :clientId => clientId,
 																				 :accessToken => oauth_details[:credentials][:token],
@@ -96,20 +96,20 @@ module IdnSdkRuby
 								end
 
 								def logout(authorization)
-									@host_url = "http://localhost:8080" if @host_url.nil? #response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil? #response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("get", @host_url+@logoutUrl, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
 
 								def getMemberDetails(authorization, uuid)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("get", @host_url+@profileUrl+"/#{uuid}", :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
 
 								def updateMemberDetails(authorization, uuid, memberApiModel)
-									@host_url = "http://localhost:8080" if @host_url.nil?
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									body = memberApiModel.to_s
 									response = self.class.send("put", @host_url+@profileUrl+"/#{uuid}", :body => body, :headers => {"Authorization" => "Bearer " + authorization})
