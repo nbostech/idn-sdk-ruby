@@ -11,6 +11,16 @@ module IdnSdkRuby
 								attr_accessor :baseIdentityUrl, :tokenUrl, :loginUrl, :logoutUrl, :signupUrl,
 															:connectUrl, :authorizeUrl, :profileUrl, :forgotUrl, :changeUrl,
 															:socialLoginUrl, :host_url
+
+								# Api Server Social Authentication End Point URIs
+								FACEBOOK_LOGIN_URI = "/api/identity/v0/auth/social/facebook/connect"
+								GOOGLE_LOGIN_URI = "/api/identity/v0/auth/social/googlePlus/connect"
+								TWITER_LOGIN_URI = "/api/identity/v0/auth/social/twitter/connect"
+								GITHUB_LOGIN_URI = "/api/identity/v0/auth/social/gitHub/connect"
+								LINKEDIN_LOGIN_URI = "/api/identity/v0/auth/social/linkedIn/connect"
+								INSTAGRAM_LOGIN_URI = "/api/identity/v0/auth/social/instagram/connect"
+								INVALID_SOCIAL_URI  = "/api/identity/v0/auth/social/invalid/connect"
+
 								include HTTMultiParty
 
 								headers 'Accept' => 'application/json', 'Content-Type' => 'application/json'
@@ -22,12 +32,12 @@ module IdnSdkRuby
 									@tokenUrl = "/oauth/token"
 									@loginUrl = @baseIdentityUrl + "/auth/login"
 									@signupUrl = @baseIdentityUrl + "/users/signup"
-									@connectUrl = @baseIdentityUrl + "/auth/social/{connectService}/connect"
-									@authorizeUrl = @baseIdentityUrl + "/auth/social/{authorizeService}/authorize"
 									@profileUrl = @baseIdentityUrl + "/users"
 									@forgotUrl = @baseIdentityUrl + "/auth/forgotPassword"
 									@changeUrl = @baseIdentityUrl + "/auth/changePassword"
 									@logoutUrl = @baseIdentityUrl + "/auth/logout"
+									@connectUrl = @baseIdentityUrl + "/auth/social/{connectService}/connect"
+									@authorizeUrl = @baseIdentityUrl + "/auth/social/{authorizeService}/authorize"
 									@socialLoginUrl = @baseIdentityUrl + "/auth/social/{loginService}/login"
 								end
 
@@ -64,7 +74,6 @@ module IdnSdkRuby
 									@host_url = "http://localhost:8080" if @host_url.nil?
 									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									body = updatePasswordApiModel.to_s
-									binding.pry
 									response = self.class.send("post", @host_url+@changeUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
@@ -75,7 +84,15 @@ module IdnSdkRuby
 								def authorize
 								end
 
-								def connect
+								def connect(authorization, oauth_details, connectService, clientId)
+									@host_url = "http://localhost:8080" if @host_url.nil?
+									@connect_service = get_social_login_uri(connectService)
+									body = { :clientId => clientId,
+																				 :accessToken => oauth_details[:credentials][:token],
+																				 :expiresIn => "#{oauth_details[:credentials][:expires_at]}"
+									}
+									response = self.class.send("post", @host_url+@connect_service, :body => body.to_json, :headers => {"Authorization" => "Bearer " + authorization})
+									return response
 								end
 
 								def logout(authorization)
@@ -97,6 +114,26 @@ module IdnSdkRuby
 									body = memberApiModel.to_s
 									response = self.class.send("put", @host_url+@profileUrl+"/#{uuid}", :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
+								end
+
+								# Method to return end point URI for specific social login
+								def get_social_login_uri(provider)
+									case provider
+										when "facebook"
+											FACEBOOK_LOGIN_URI
+										when "google_oauth2"
+											GOOGLE_LOGIN_URI
+										when "twitter"
+											TWITER_LOGIN_URI
+										when "github"
+											GITHUB_LOGIN_URI
+										when "linkedin"
+											LINKEDIN_LOGIN_URI
+										when "instagram"
+											INSTAGRAM_LOGIN_URI
+										else
+											INVALID_SOCIAL_URI
+									end
 								end
 									
 							end

@@ -20,18 +20,18 @@ module IdnSdkRuby
                     @firstName = member_details["firstName"]
                     @lastName = member_details["lastName"]
                     @phone = member_details["phone"]
-                    add_socilaAccounts(member_details["socialAccounts"])
+                    add_socialAccounts(member_details["socialAccounts"])
                     add_emailConnects(member_details["emailConnects"])
                     token_details = parsed_response["token"].nil? ? nil : parsed_response["token"]
                     @token = IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel.new(parsed_response["token"])
                   end
                 end
 
-                def add_socilaAccounts(accounts)
+                def add_socialAccounts(accounts)
                   @socialAccounts = []
                   if accounts.size > 0
                     accounts.each do |sp|
-                      @social_accounts << IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::SocialAccountApiModel(sp)
+                      @socialAccounts << IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::SocialAccountApiModel.new(sp)
                     end
                   end
                 end
@@ -40,7 +40,7 @@ module IdnSdkRuby
                   @emailConnects = []
                   if email_connects.size > 0
                     email_connects.each do |ec|
-                      @emailConnects << IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::EmailConnectApiModel(ec)
+                      @emailConnects << IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::EmailConnectApiModel.new(ec)
                     end
                   end
                 end

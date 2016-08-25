@@ -5,8 +5,8 @@ module IdnSdkRuby
         module Modules
           module Media
             module V0
-              class MediaApiModel
-                attr_accessor :extension, :supportedsizes, :mediaFileDetailsList
+              class MediaApiModel < IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::BasicActiveModel
+                attr_accessor :extension, :supportedsizes, :mediaFileDetailsList, :message
 
                 def initialize(parsed_response)
                   @extension = parsed_response["extension"]
@@ -19,6 +19,23 @@ module IdnSdkRuby
                   media_details_list.each do |md|
                     @mediaFileDetailsList << IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaFileDetails.new(md)
                   end
+                end
+
+                def add_errors(json_response)
+                  json_response["errors"].each do |e|
+                    property_name = e['propertyName']
+                    msg = e['message']
+                    self.errors[property_name] << msg
+                  end
+                end
+
+                def add_messages(json_response)
+                  if json_response["message"].present?
+                    @message = json_response["message"]
+                  elsif json_response["error"].present?
+                    @message = json_response["error"]
+                  end
+
                 end
 
                 def as_json(options={})

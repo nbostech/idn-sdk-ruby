@@ -67,7 +67,26 @@ module IdnSdkRuby
 									end
 								end
 
-								def connect(socialConnectApiModel, connectService)
+								def connect(oauth_details, connectService)
+									remoteApi = @remoteApiObj
+									authorization = @apiContext.getClientToken.getAccess_token()
+									map = @apiContext.getClientCredentials()
+									clientId = map["client_id"]
+									response = remoteApi.connect(authorization, oauth_details, connectService, clientId)
+
+										if response.code == 200
+											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response)
+											@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
+											{ status: 200, login: memberApiModel}
+										elsif response.code == 400
+											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new
+											memberApiModel.add_errors(response.parsed_response)
+											{ status: 400, login: memberApiModel}
+										else
+											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new
+											memberApiModel.add_messages(response.parsed_response)
+											{ status: response.code, login: memberApiModel}
+										end
 								end
 
 								def authorize(authorizeService, code, state, callback)

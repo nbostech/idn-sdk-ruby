@@ -20,8 +20,14 @@ module IdnSdkRuby
                   tokenApiModel = @apiContext.getUserToken("identity")
                   response = remoteApi.getMedia(tokenApiModel, uuid, mediafor)
                   if response.code == 200
-                    mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
-                    return mediaApiModel
+                    if !response["extension"].nil?
+                      mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
+                      return {:status => 200, :media => mediaApiModel}
+                    else
+                      mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new
+                      mediaApiModel.add_message(response.parsed_response)
+                      return {:status => 200, :media => mediaApiModel}
+                    end
                   else
                     return response.parsed_response
                   end
@@ -35,9 +41,11 @@ module IdnSdkRuby
                   if response.code == 200
                     if !response["extension"].nil?
                       mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
-                      return mediaApiModel
+                      return {:status => 200, :media => mediaApiModel}
                     else
-                      return response.parsed_response
+                      mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new
+                      mediaApiModel.message(response.parsed_response)
+                      return {:status => 200, :media => mediaApiModel}
                     end
                   else
                     return response.parsed_response
