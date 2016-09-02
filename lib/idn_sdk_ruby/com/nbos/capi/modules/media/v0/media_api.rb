@@ -22,11 +22,11 @@ module IdnSdkRuby
                   if response.code == 200
                     if !response["extension"].nil?
                       mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
-                      return {:status => 200, :media => mediaApiModel}
+                      return {status: 200, data: mediaApiModel}
                     else
                       mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new
                       mediaApiModel.add_message(response.parsed_response)
-                      return {:status => 200, :media => mediaApiModel}
+                      return {status: 200, data: mediaApiModel}
                     end
                   else
                     return response.parsed_response
@@ -41,11 +41,11 @@ module IdnSdkRuby
                   if response.code == 200
                     if !response["extension"].nil?
                       mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new(response.parsed_response)
-                      return {:status => 200, :media => mediaApiModel}
+                      return {status: 200, data: mediaApiModel}
                     else
                       mediaApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApiModel.new
                       mediaApiModel.message(response.parsed_response)
-                      return {:status => 200, :media => mediaApiModel}
+                      return {status: 200, data: mediaApiModel}
                     end
                   else
                     return response.parsed_response

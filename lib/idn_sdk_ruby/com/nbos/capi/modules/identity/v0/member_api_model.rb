@@ -22,7 +22,6 @@ module IdnSdkRuby
                     @phone = member_details["phone"]
                     add_socialAccounts(member_details["socialAccounts"])
                     add_emailConnects(member_details["emailConnects"])
-                    token_details = parsed_response["token"].nil? ? nil : parsed_response["token"]
                     @token = IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel.new(parsed_response["token"])
                   end
                 end

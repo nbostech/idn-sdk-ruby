@@ -22,7 +22,6 @@ module IdnSdkRuby
 
                 def getMedia(authorization, uuid, mediafor)
                   @host_url = "http://api.qa1.nbos.in" if @host_url.nil?
-                  #response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
                   query_params = { :id => uuid, :mediafor => mediafor}
                   response = self.class.send("get", @host_url+@mediaUrl, :query => query_params, :headers => {"Authorization" => "Bearer " + authorization})
                   return response
@@ -30,7 +29,6 @@ module IdnSdkRuby
 
                 def uploadMedia(authorization, uuid, mediafor, media_file)
                   @host_url = "http://api.qa1.nbos.in" if @host_url.nil?
-                  #response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
                   query_params = { :id => uuid, :mediafor => mediafor}
                   body = {:file => media_file}
                   response = self.class.send("post", @host_url+@mediaUrl, :body => body, :query => query_params, :headers => {"Authorization" => "Bearer " + authorization})

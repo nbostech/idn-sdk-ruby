@@ -25,7 +25,7 @@ class IdnSdkRuby::Com::Nbos::Capi::Api::V0::InMemoryApiContext < IdnSdkRuby::Com
 			@@store["token.client"]=tokenApiModel
 		end
 
-		def getClientToken()
+		def getClientToken(scope = nil)
 				return @@store["token.client"]
 		end
 

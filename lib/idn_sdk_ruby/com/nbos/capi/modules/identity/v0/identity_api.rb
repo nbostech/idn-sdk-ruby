@@ -15,12 +15,12 @@ module IdnSdkRuby
 									@remoteApiObj = getRemoteApiClass().new
 								end
 
-								def getClientToken()
+								def getClientToken(scope = nil)
 									remoteApi = @remoteApiObj
 									map = @apiContext.getClientCredentials()
 									clientId = map["client_id"]
 									secret = map["client_secret"]
-									response = remoteApi.getToken(clientId, secret, "client_credentials")
+									response = remoteApi.getToken(clientId, secret, "client_credentials", scope)
 									if response.code == 200
 										tokenApiModel = IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel.new(response.parsed_response)
 										@apiContext.setClientToken(tokenApiModel)
@@ -37,13 +37,13 @@ module IdnSdkRuby
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response)
 										@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
-										{ status: 200, member: memberApiModel}
+										{ status: 200, data: memberApiModel}
 									elsif response.code == 400
 										loginModel.add_errors(response.parsed_response)
-										{ status: 400, member: nil, login: loginModel}
+										{ status: 400, data: loginModel}
 									else
 										loginModel.add_messages(response.parsed_response)
-										{ status: response.code, login: loginModel}
+										{ status: response.code, data: loginModel}
 									end
 								end
 
@@ -55,15 +55,15 @@ module IdnSdkRuby
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response)
 										@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
-										{status: 200, member: memberApiModel}
+										{status: 200, data: memberApiModel}
 									elsif response.code == 400
 										memberSignupModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberSignupModel.new
 										memberSignupModel.add_errors(response.parsed_response)
-										{status: response.code, member: memberSignupModel}
+										{status: response.code, data: memberSignupModel}
 									else
 										memberSignupModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberSignupModel.new
 										memberSignupModel.add_messages(response.parsed_response)
-										{status: response.code, member: memberApiModel}
+										{status: response.code, data: memberApiModel}
 									end
 								end
 
@@ -77,15 +77,15 @@ module IdnSdkRuby
 										if response.code == 200
 											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response)
 											@apiContext.setUserToken('identity', memberApiModel.token.getAccess_token)
-											{ status: 200, login: memberApiModel}
+											{ status: 200, data: memberApiModel}
 										elsif response.code == 400
 											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new
 											memberApiModel.add_errors(response.parsed_response)
-											{ status: 400, login: memberApiModel}
+											{ status: 400, data: memberApiModel}
 										else
 											memberApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new
 											memberApiModel.add_messages(response.parsed_response)
-											{ status: response.code, login: memberApiModel}
+											{ status: response.code, data: memberApiModel}
 										end
 								end
 
@@ -99,11 +99,11 @@ module IdnSdkRuby
 
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response, false)
-										{status: 200, member: memberApiModel}
+										{status: 200, data: memberApiModel}
 									else
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(nil, false)
 										memberApiModel.add_messages(response.parsed_response)
-										{ status: response.code, member: memberApiModel}
+										{ status: response.code, data: memberApiModel}
 									end
 								end
 
@@ -114,10 +114,10 @@ module IdnSdkRuby
 
 									if response.code == 200
 										memberApiModel =  IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::MemberApiModel.new(response.parsed_response, false)
-										{status: 200, member: memberApiModel}
+										{status: 200, data: memberApiModel}
 									elsif response.code == 400
 										memberApiModel.add_errors(api_response.parsed_response)
-										{status: 400, member: memberApiModel}
+										{status: 400, data: memberApiModel}
 									end
 								end
 
@@ -128,10 +128,10 @@ module IdnSdkRuby
 
 									if response.code == 400
 										updatePasswordApiModel.add_errors(response.parsed_response)
-										{ status: 400, login: updatePasswordApiModel}
+										{ status: 400, data: updatePasswordApiModel}
 									else
 										updatePasswordApiModel.add_messages(response.parsed_response)
-										{ status: response.code, login: updatePasswordApiModel}
+										{ status: response.code, data: updatePasswordApiModel}
 									end
 								end
 
@@ -147,15 +147,28 @@ module IdnSdkRuby
 									if response.code == 200
 										@apiContext.setUserToken('identity', nil)
 										loginModel.add_messages(response.parsed_response)
-										{status: 200, login: loginModel}
+										{status: 200, data: loginModel}
 									else
 										loginModel.add_messages(response.parsed_response)
-										{status: response.code, login: loginModel}
+										{status: response.code, data: loginModel}
 									end
 								end
 
 								def socialWebViewLogin(connectService, callback)
 									
+								end
+
+								def tokenVerify(authorization, tokenToVerify, module_key)
+									remoteApi = @remoteApiObj
+									response = remoteApi.tokenVerify(authorization, tokenToVerify, module_key)
+									if response.code == 200
+										moduleTokenApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::ModuleTokenApiModel.new(response.parsed_response)
+										{status: 200, data: moduleTokenApiModel}
+									else
+										moduleTokenApiModel = IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::ModuleTokenApiModel.new
+										moduleTokenApiModel.add_messages(response.parsed_response)
+										{status: response.code, data: moduleTokenApiModel}
+									end
 								end
 
 							end

@@ -7,7 +7,7 @@ module IdnSdkRuby
             module V0
               class MediaIdsRegistry
 
-                def initialize
+                def self.init
                   IdnSdkRuby::Com::Nbos::Capi::Modules::Ids::V0::Ids.register("media", IdnSdkRuby::Com::Nbos::Capi::Modules::Media::V0::MediaApi)
                 end
               end

@@ -1,7 +1,7 @@
-require 'json'
+require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/basic_active_model"
 
-class IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel
-	attr_accessor :scope, :expires_in, :token_type, :refresh_token, :access_token
+class IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel < IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::BasicActiveModel
+	attr_accessor :scope, :expires_in, :token_type, :refresh_token, :access_token, :message
 
 	def initialize(parsed_response = nil)
 		if !parsed_response.nil?
@@ -31,6 +31,23 @@ class IdnSdkRuby::Com::Nbos::Capi::Api::V0::TokenApiModel
 
 	def getAccess_token()
 			return @access_token
+	end
+
+	def add_errors(json_response)
+		json_response["errors"].each do |e|
+			property_name = e['propertyName']
+			msg = e['message']
+			self.errors[property_name] << msg
+		end
+	end
+
+	def add_messages(json_response)
+		if json_response["message"].present?
+			@message = json_response["message"]
+		elsif json_response["error"].present?
+			@message = json_response["error"]
+		end
+
 	end
 
 	def as_json(options={})

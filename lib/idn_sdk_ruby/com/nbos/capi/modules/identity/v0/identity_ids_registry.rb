@@ -8,7 +8,7 @@ module IdnSdkRuby
 					module Identity
 						module V0
 							class IdentityIdsRegistry
-								def initialize()
+								def self.init
 									IdnSdkRuby::Com::Nbos::Capi::Modules::Ids::V0::Ids.register("identity", IdnSdkRuby::Com::Nbos::Capi::Modules::Identity::V0::IdentityApi)
 								end
 							end

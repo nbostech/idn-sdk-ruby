@@ -8,6 +8,8 @@ require "idn_sdk_ruby/com/nbos/capi/api/v0/network_callback"
 require "idn_sdk_ruby/com/nbos/capi/api/v0/token_api_model"
 require "idn_sdk_ruby/com/nbos/capi/api/v0/idn_sdk"
 
+require "idn_sdk_ruby/com/nbos/capi/modules/core/v0/module_api_model"
+
 require "idn_sdk_ruby/com/nbos/capi/modules/ids/v0/ids"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/identity_ids_registry"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/identity_remote_api"
@@ -20,6 +22,7 @@ require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/new_member_api_model"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/member_signup_model"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/update_password_api_model"
 require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/basic_active_model"
+require "idn_sdk_ruby/com/nbos/capi/modules/identity/v0/module_token_api_model"
 
 require "idn_sdk_ruby/com/nbos/capi/modules/media/v0/media_ids_registry"
 require "idn_sdk_ruby/com/nbos/capi/modules/media/v0/media_remote_api"

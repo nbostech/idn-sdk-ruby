@@ -30,6 +30,7 @@ module IdnSdkRuby
 								def initialize()
 									@baseIdentityUrl = "/api/identity/v0"
 									@tokenUrl = "/oauth/token"
+									@tokenVerifyUrl = "/api/oauth/v0/tokens"
 									@loginUrl = @baseIdentityUrl + "/auth/login"
 									@signupUrl = @baseIdentityUrl + "/users/signup"
 									@profileUrl = @baseIdentityUrl + "/users"
@@ -41,8 +42,9 @@ module IdnSdkRuby
 									@socialLoginUrl = @baseIdentityUrl + "/auth/social/{loginService}/login"
 								end
 
-								def getToken(clientId, clientSecret, grantType)
-									query_params = {:client_id => clientId, :client_secret => clientSecret, :grant_type => grantType}
+								def getToken(clientId, clientSecret, grantType, scope = nil)
+									scope = scope.nil? ? [] : scope
+									query_params = {:client_id => clientId, :client_secret => clientSecret, :grant_type => grantType, :scope => scope}
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									response = self.class.send("get", @host_url+@tokenUrl, :query => query_params)
 									return response
@@ -54,7 +56,6 @@ module IdnSdkRuby
 								def login(authorization, loginModel)
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									body = loginModel.to_s
-									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("post", @host_url+@loginUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
@@ -62,7 +63,6 @@ module IdnSdkRuby
 								def signup(authorization, memberSignupModel)
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									body = memberSignupModel.to_s
-									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("post", @host_url+@signupUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
@@ -72,7 +72,6 @@ module IdnSdkRuby
 
 								def updateCredentials(authorization,updatePasswordApiModel)
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
-									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									body = updatePasswordApiModel.to_s
 									response = self.class.send("post", @host_url+@changeUrl, :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
@@ -88,8 +87,8 @@ module IdnSdkRuby
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
 									@connect_service = get_social_login_uri(connectService)
 									body = { :clientId => clientId,
-																				 :accessToken => oauth_details[:credentials][:token],
-																				 :expiresIn => "#{oauth_details[:credentials][:expires_at]}"
+													 :accessToken => oauth_details[:credentials][:token],
+													 :expiresIn => "#{oauth_details[:credentials][:expires_at]}"
 									}
 									response = self.class.send("post", @host_url+@connect_service, :body => body.to_json, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
@@ -103,14 +102,12 @@ module IdnSdkRuby
 
 								def getMemberDetails(authorization, uuid)
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
-									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									response = self.class.send("get", @host_url+@profileUrl+"/#{uuid}", :headers => {"Authorization" => "Bearer " + authorization})
 									return response
 								end
 
 								def updateMemberDetails(authorization, uuid, memberApiModel)
 									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
-									#response= HTTParty.post(@host_url+@loginUrl,{:body => body, :headers => { "Authorization" => "Bearer #{authorization}"}})
 									body = memberApiModel.to_s
 									response = self.class.send("put", @host_url+@profileUrl+"/#{uuid}", :body => body, :headers => {"Authorization" => "Bearer " + authorization})
 									return response
@@ -134,6 +131,12 @@ module IdnSdkRuby
 										else
 											INVALID_SOCIAL_URI
 									end
+								end
+
+								def tokenVerify(authorization, tokenToVerify, module_key)
+									@host_url = "http://api.qa1.nbos.in" if @host_url.nil?
+									response = self.class.send("get", @host_url+@tokenVerifyUrl+"/#{tokenToVerify}", :headers => {"Authorization" => "Bearer " + authorization, "x-module-key" => module_key})
+									return response
 								end
 									
 							end

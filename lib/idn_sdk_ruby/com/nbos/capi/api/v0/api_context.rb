@@ -32,7 +32,7 @@ module IdnSdkRuby
 								def getClientCredentials
 								end
 
-								def getClientToken
+								def getClientToken(scope = nil)
 								end
 
 								def setUserToken(moduleName, tokenApiModel)
